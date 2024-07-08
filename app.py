@@ -1,7 +1,7 @@
 from flask import Flask, request, jsonify
 from flask_sqlalchemy import SQLAlchemy
 from flask_cors import CORS
-
+import json
 
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///test.db'
@@ -19,7 +19,9 @@ class User(db.Model):
 @app.route('/users', methods=['POST'])
 def add_user():
     data = request.get_json()
-    new_user = User(name=data['name'], email=data['email'])
+    name = data.get('name')
+    email = data.get('email')
+    new_user = User(name=name, email=email)
     db.session.add(new_user)
     db.session.commit()
     return jsonify({"message": "User added successfully!"}), 201
